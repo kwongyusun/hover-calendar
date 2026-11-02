@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.supabase.co">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Calendar">
+  <meta name="theme-color" content="#161a22">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="icon" href="icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>Hover Calendar</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="mobile.css">
+</head>
+<body class="web">
+  <div id="tab"><div class="grip" id="grip"></div><div class="tab-date"><div id="tabWd"></div><div id="tabNum"></div></div></div>
+
+  <div id="panel">
+    <header class="bar">
+      <div class="nav">
+        <button class="icon" id="prevBtn" title="Previous">‹</button>
+        <button id="todayBtn">Today</button>
+        <button class="icon" id="nextBtn" title="Next">›</button>
+        <h1 id="title"></h1>
+      </div>
+      <div class="seg" id="viewSeg">
+        <button data-view="week">Week</button>
+        <button data-view="month">Month</button>
+        <button data-view="tasks">Tasks</button>
+      </div>
+      <div class="actions">
+        <button class="primary" id="newBtn">+ New event</button>
+        <button class="icon" id="shareBtn" title="Share">🔗</button>
+        <button class="icon" id="catBtn" title="Categories">🏷</button>
+        <button class="icon" id="themeBtn" title="Colour theme">🎨</button>
+        <button class="icon" id="settingsBtn" title="Settings">⚙</button>
+        <button class="icon" id="pinBtn" hidden>📌</button>
+        <button class="icon" id="hideBtn" hidden>✕</button>
+      </div>
+    </header>
+    <div class="filters" id="filters"></div>
+    <main id="view"></main>
+  </div>
+
+  <div id="backdrop" hidden>
+    <div class="dialog" id="dialog"></div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="themes.js"></script>
+  <script src="recur.js"></script>
+  <script src="sync.js"></script>
+  <script src="cloud.js"></script>
+  <script src="host.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

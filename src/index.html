@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+  <title>Hover Calendar</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="collapsed edge-right">
+  <div id="tab">
+    <div class="grip" id="grip" title="Drag to move"><span></span><span></span><span></span></div>
+    <div class="tab-date" title="Hover to open your calendar">
+      <div class="tab-wd" id="tabWd"></div>
+      <div class="tab-num" id="tabNum"></div>
+    </div>
+  </div>
+
+  <div id="panel">
+    <header class="bar">
+      <div class="nav">
+        <button class="icon" id="prevBtn" title="Previous">‹</button>
+        <button id="todayBtn">Today</button>
+        <button class="icon" id="nextBtn" title="Next">›</button>
+        <h1 id="title"></h1>
+      </div>
+      <div class="seg" id="viewSeg">
+        <button data-view="week">Week</button>
+        <button data-view="month">Month</button>
+        <button data-view="tasks">Tasks</button>
+      </div>
+      <div class="actions">
+        <button class="primary" id="newBtn">+ New event</button>
+        <button class="icon" id="shareBtn" title="Share this week or month">🔗</button>
+        <button class="icon" id="catBtn" title="Categories">🏷</button>
+        <button class="icon" id="themeBtn" title="Colour theme">🎨</button>
+        <button class="icon" id="settingsBtn" title="Settings">⚙</button>
+        <button class="icon" id="pinBtn" title="Pin open (Ctrl+Alt+C)">📌</button>
+        <button class="icon" id="hideBtn" title="Hide">✕</button>
+      </div>
+    </header>
+    <div class="filters" id="filters"></div>
+    <main id="view"></main>
+  </div>
+
+  <div id="backdrop" hidden>
+    <div class="dialog" id="dialog"></div>
+  </div>
+
+  <script src="themes.js"></script>
+  <script src="recur.js"></script>
+  <script src="sync.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

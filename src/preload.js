@@ -1,0 +1,26 @@
+const { contextBridge, ipcRenderer } = require('electron');
+
+contextBridge.exposeInMainWorld('cal', {
+  load: () => ipcRenderer.invoke('load'),
+  save: (data, rev) => ipcRenderer.send('save', data, rev),
+  holdOpen: (v) => ipcRenderer.send('hold-open', v),
+  setPinned: (v) => ipcRenderer.send('set-pinned', v),
+  expand: () => ipcRenderer.send('expand'),
+  collapse: () => ipcRenderer.send('collapse'),
+  dragStart: () => ipcRenderer.send('drag-start'),
+  dragEnd: () => ipcRenderer.send('drag-end'),
+  resetTab: () => ipcRenderer.send('reset-tab'),
+  setLogin: (v) => ipcRenderer.send('set-login', v),
+  quit: () => ipcRenderer.send('quit'),
+  copyPicture: (rect) => ipcRenderer.invoke('capture-copy', rect),
+  savePicture: (rect, name) => ipcRenderer.invoke('capture-save', rect, name),
+  saveText: (text, name, filterName, ext) => ipcRenderer.invoke('save-text', text, name, filterName, ext),
+  onReplaced: (fn) => ipcRenderer.on('data-replaced', (_e, m) => fn(m)),
+  onSyncState: (fn) => ipcRenderer.on('sync-state', (_e, m) => fn(m)),
+  syncState: () => ipcRenderer.invoke('sync-state'),
+  syncConnect: (o) => ipcRenderer.invoke('sync-connect', o),
+  syncDisconnect: () => ipcRenderer.invoke('sync-disconnect'),
+  syncNow: () => ipcRenderer.send('sync-now'),
+  onMode: (fn) => ipcRenderer.on('mode', (_e, m) => fn(m)),
+  onSettings: (fn) => ipcRenderer.on('settings-changed', (_e, s) => fn(s)),
+});

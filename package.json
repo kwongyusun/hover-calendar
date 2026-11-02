@@ -1,0 +1,45 @@
+{
+  "name": "hover-calendar",
+  "version": "1.5.0",
+  "description": "An always-on-top calendar that hides on the screen edge and slides out on hover.",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win portable nsis --x64"
+  },
+  "author": "Tony",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^33.4.11",
+    "electron-builder": "^25.1.8"
+  },
+  "productName": "Hover Calendar",
+  "build": {
+    "appId": "com.hovercalendar.app",
+    "productName": "Hover Calendar",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*"
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        "portable",
+        "nsis"
+      ]
+    },
+    "portable": {
+      "artifactName": "HoverCalendar-portable-${version}.exe"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "artifactName": "HoverCalendar-Setup-${version}.exe",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  }
+}
