@@ -5,7 +5,7 @@
 //    choose "Edit Widget", and pick this script.
 
 const SUPABASE_URL = 'https://vazwaoiugxvvljerbdoq.supabase.co';
-const SUPABASE_KEY = '__SUPABASE_KEY__';
+const SUPABASE_KEY = 'sb_publishable_A5WnzMAGYRWxLaAcGDFiyg_17_MtnGF';
 const APP_URL = 'https://kwongyusun.github.io/hover-calendar/';
 
 const KC = 'hover-calendar-session';
