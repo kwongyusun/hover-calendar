@@ -105,10 +105,21 @@ function occursOn(ev, s) {
 
 // ---------- drawing ----------
 
-const dark = Device.isUsingDarkAppearance();
-const C = dark
-  ? { bg: '#161a22', line: '#2a303c', text: '#e8ebf1', muted: '#8f98a8', today: '#4f7cff', now: '#ff5d5d', tint: '#1e2533' }
-  : { bg: '#ffffff', line: '#e3e7ee', text: '#1d2330', muted: '#6b7486', today: '#4f7cff', now: '#e5484d', tint: '#eef3ff' };
+// Same colour themes as the app: [background, surface, raised, lines, text, muted, accent, now, dark?]
+const THEMES = {"midnight":["#161a22","#1d222c","#252b37","#2c3340","#e8ebf1","#8f98a8","#4f7cff","#ff5d5d",1],"nord":["#2e3440","#353c4a","#3b4252","#4c566a","#eceff4","#a3abbb","#88c0d0","#bf616a",1],"dracula":["#282a36","#2f3140","#3a3c4e","#44475a","#f8f8f2","#a0a4c4","#bd93f9","#ff5555",1],"tokyo":["#1a1b26","#1f2335","#292e42","#2f334d","#c0caf5","#8189b3","#7aa2f7","#f7768e",1],"mocha":["#1e1e2e","#262637","#313244","#45475a","#cdd6f4","#a6adc8","#cba6f7","#f38ba8",1],"gruvbox":["#282828","#32302f","#3c3836","#504945","#ebdbb2","#a89984","#83a598","#fb4934",1],"onedark":["#282c34","#2f343e","#3a3f4b","#3e4451","#dcdfe4","#9da5b4","#61afef","#e06c75",1],"soldark":["#002b36","#073642","#0d4250","#1a4f5c","#eee8d5","#93a1a1","#268bd2","#dc322f",1],"monokai":["#272822","#2f302a","#3b3c35","#49483e","#f8f8f2","#a59f85","#a6e22e","#f92672",1],"rosepine":["#191724","#1f1d2e","#26233a","#403d52","#e0def4","#908caa","#c4a7e7","#eb6f92",1],"everforest":["#2d353b","#343f44","#3d484d","#475258","#d3c6aa","#9da9a0","#a7c080","#e67e80",1],"kanagawa":["#1f1f28","#2a2a37","#363646","#54546d","#dcd7ba","#9a9a8e","#7e9cd8","#ff5d62",1],"ayumirage":["#1f2430","#242936","#2d3343","#343b4c","#cccac2","#8a9199","#ffcc66","#f28779",1],"synthwave":["#241b2f","#2a2139","#34294f","#463465","#f4eeff","#a99bc9","#ff7edb","#fe4450",1],"cyberpunk":["#0d0221","#150734","#1f0f47","#2e1a63","#f3f0ff","#a69cd0","#00f0ff","#ff2a6d",1],"oceanic":["#0f1c2e","#14243a","#1c3049","#24405d","#e3edf7","#8ea6c0","#2ec4b6","#ff6b6b",1],"forest":["#14201a","#1a2a22","#22352b","#2d4437","#e4efe6","#94ae9d","#52b788","#e76f51",1],"matcha":["#1b201a","#222921","#2b3329","#3a4537","#e8eddc","#a3ad96","#9bc53d","#e4572e",1],"ember":["#1c1412","#251a17","#30221d","#43302a","#f3e6df","#b39a8f","#ff7849","#ff4d4d",1],"espresso":["#1e1915","#26201b","#312922","#40362d","#efe4d6","#ab9b88","#c8a27a","#e26d5c",1],"amethyst":["#1a1625","#211c30","#2a2440","#3a3256","#ece8f7","#a49cc0","#9d7cff","#ff6b8b",1],"cherry":["#1f1418","#28191f","#342029","#4a2c39","#f7e9ee","#b9939f","#ff4f81","#ff4f4f",1],"aurora":["#0b1622","#10202f","#162a3d","#21384f","#e6f4f1","#8fb3b0","#4ade80","#f472b6",1],"graphite":["#18181b","#1f1f23","#27272a","#3f3f46","#f4f4f5","#a1a1aa","#d4d4d8","#f87171",1],"oled":["#000000","#0a0a0a","#151515","#262626","#f5f5f5","#9a9a9a","#3b82f6","#ef4444",1],"navygold":["#0e1726","#142036","#1b2a45","#27395a","#f1ece0","#a4acbd","#e6b450","#ef6461",1],"paper":["#ffffff","#f5f7fa","#e9edf3","#dde2ea","#1d2330","#6b7486","#4f7cff","#e5484d",0],"github":["#ffffff","#f6f8fa","#eaeef2","#d0d7de","#1f2328","#656d76","#0969da","#cf222e",0],"latte":["#eff1f5","#e6e9ef","#dce0e8","#ccd0da","#4c4f69","#6c6f85","#8839ef","#d20f39",0],"dawn":["#faf4ed","#fffaf3","#f2e9e1","#dfdad9","#575279","#797593","#907aa9","#b4637a",0],"sollight":["#fdf6e3","#f5efdc","#eee8d5","#ddd6c1","#073642","#657b83","#268bd2","#dc322f",0],"gruvlight":["#fbf1c7","#f2e5bc","#ebdbb2","#d5c4a1","#3c3836","#7c6f64","#076678","#9d0006",0],"snow":["#eceff4","#e5e9f0","#d8dee9","#c9d0dc","#2e3440","#4c566a","#5e81ac","#bf616a",0],"everlight":["#fdf6e3","#f4f0d9","#efebd4","#e0dcc7","#5c6a72","#829181","#8da101","#f85552",0],"ayulight":["#fafafa","#f3f4f5","#e8e9eb","#d9dadc","#5c6166","#8a9199","#ff9940","#f07171",0],"sakura":["#fff7f9","#fdeef2","#f9e1e8","#f0cdd8","#3d2a32","#8a6b77","#e05780","#d62839",0],"mint":["#f4fbf8","#e9f6f0","#dcefe6","#c7e3d6","#1f3a30","#5d7d70","#10b981","#ef4444",0],"sky":["#f5f9ff","#ebf3fe","#dde9fb","#c9daf3","#172b4d","#5e6c84","#0c66e4","#e34935",0],"breeze":["#f2f8fa","#e6f1f5","#d6e8ef","#bfd9e3","#12313d","#55747f","#0e8fa6","#e15554",0],"lavender":["#f8f6fd","#f0ecfa","#e5dff6","#d4cbec","#2d2640","#6f6688","#7c5cff","#e5484d",0],"peach":["#fff8f3","#fdeee4","#fae1d2","#f2ccb5","#3d2a20","#8c6b5a","#ff7a45","#e5383b",0],"sand":["#faf6f0","#f3ece1","#eadfcf","#dccdb7","#3b2f24","#85725f","#c2703d","#c0392b",0],"lemonade":["#fffdf0","#fff8d6","#fff1b8","#f0e3a0","#3a3418","#827a50","#e0a800","#e4572e",0],"sage":["#f6f8f3","#edf1e8","#e1e8da","#cdd8c3","#2a3326","#6b7a64","#5a7d4f","#c8553d",0],"nordic":["#f7f9fb","#eef2f6","#e2e8ef","#cfd8e3","#1c2733","#5f6f80","#3d7dca","#d1495b",0],"terracotta":["#fbf5f1","#f5ebe4","#ecdcd1","#dfc6b6","#3a2219","#86665a","#c75b39","#b23a48",0]};
+function mix(a, b, t) {
+  const p = (h) => parseInt(h.slice(1), 16);
+  const x = p(a), y = p(b);
+  const ch = (s) => Math.round(((x >> s) & 255) * (1 - t) + ((y >> s) & 255) * t);
+  return "#" + ((1 << 24) + (ch(16) << 16) + (ch(8) << 8) + ch(0)).toString(16).slice(1);
+}
+let C;
+// Use the theme picked in the app; "auto" follows the phone's light/dark setting.
+function useTheme(id) {
+  const c = THEMES[id] || THEMES[Device.isUsingDarkAppearance() ? "midnight" : "paper"];
+  C = { bg: c[0], line: mix(c[3], c[0], 0.3), text: c[4], muted: c[5], today: c[6], now: c[7], tint: mix(c[0], c[6], c[8] ? 0.12 : 0.08) };
+}
+useTheme(null);
 const WD = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 function textOn(hex) {
@@ -270,6 +281,8 @@ w.refreshAfterDate = new Date(Date.now() + 15 * 60 * 1000);
 const family = config.widgetFamily || 'large';
 try {
   const { data, offline } = await loadCalendar();
+  useTheme(data && data.settings && data.settings.theme);
+  w.backgroundColor = new Color(C.bg);
   if (family === 'small') {
     w.setPadding(12, 12, 12, 12);
     todayList(data, w);

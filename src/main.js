@@ -266,6 +266,7 @@ function setPinned(v) {
 }
 
 // The portable .exe unpacks itself to a temp folder, so point Windows at the real .exe instead.
+const IS_MAC = process.platform === 'darwin';
 const loginOpts = () => (process.env.PORTABLE_EXECUTABLE_FILE ? { path: process.env.PORTABLE_EXECUTABLE_FILE } : {});
 const isLoginItem = () => app.getLoginItemSettings(loginOpts()).openAtLogin;
 
@@ -282,7 +283,7 @@ function buildTrayMenu() {
     { label: pinned ? 'Unpin (auto-hide)' : 'Pin open', click: () => setPinned(!pinned) },
     { label: 'Move tab back to the right edge', click: resetTab },
     { type: 'separator' },
-    { label: 'Start with Windows', type: 'checkbox', checked: isLoginItem(), click: (item) => setLogin(item.checked) },
+    { label: IS_MAC ? 'Open at login' : 'Start with Windows', type: 'checkbox', checked: isLoginItem(), click: (item) => setLogin(item.checked) },
     { type: 'separator' },
     { label: 'Quit Hover Calendar', click: () => app.quit() },
   ]));
@@ -302,6 +303,7 @@ function createWindow() {
     show: false,
     backgroundColor: '#161a22',
     title: 'Hover Calendar',
+    acceptFirstMouse: true, // Mac: the first click inside acts straight away
     icon: path.join(__dirname, 'tray.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -310,7 +312,8 @@ function createWindow() {
     },
   });
   win.setAlwaysOnTop(true, 'screen-saver');
-  win.setVisibleOnAllWorkspaces(true);
+  // Show on every desktop (Space), and above full-screen apps on a Mac.
+  win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
   win.loadFile(path.join(__dirname, 'index.html'));
   win.once('ready-to-show', () => {
     win.showInactive();
@@ -495,7 +498,10 @@ app.whenReady().then(() => {
   if (process.platform === 'win32') app.setAppUserModelId('com.hovercalendar.app');
   createWindow();
 
-  tray = new Tray(nativeImage.createFromPath(path.join(__dirname, 'tray.png')));
+  if (IS_MAC && app.dock) app.dock.hide(); // menu bar app: no Dock icon
+  let trayImg = nativeImage.createFromPath(path.join(__dirname, 'tray.png'));
+  if (IS_MAC) trayImg = trayImg.resize({ width: 18, height: 18 });
+  tray = new Tray(trayImg);
   tray.setToolTip('Hover Calendar');
   tray.on('click', () => setPinned(!pinned));
   buildTrayMenu();

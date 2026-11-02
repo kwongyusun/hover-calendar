@@ -11,6 +11,7 @@ let lastSaved = null;      // the data as last saved, to tell what changed
 let pendingDoc = null;     // newer data from a sync, applied once no dialog is open
 const IS_WEB = !!window.cal.isWeb;
 if (IS_WEB) document.body.classList.add('web');
+if (window.cal.isMac) { document.body.classList.add('mac'); document.querySelector('#pinBtn')?.setAttribute('title', 'Pin open (⌘⌥C)'); }
 let scrolledOnce = false;
 
 const $ = (sel, el = document) => el.querySelector(sel);
@@ -983,7 +984,7 @@ async function openSettings() {
       h('div', { class: 'row' }, h('label', { class: 'l' }, 'Scroll to'), dayStart, h('span', {}, ':00 when the week opens')),
       h('div', { class: 'row' }, h('label', { class: 'l' }, 'Month day'), mFrom, h('span', {}, ':00 to'), mTo, h('span', {}, ':00')),
       h('div', { class: 'hint' }, 'The hours each day box in the month view covers, top to bottom.'),
-      h('div', { class: 'row desk-only' }, h('label', { class: 'l' }, ''), h('label', { for: 'login', style: 'display:flex;gap:6px;align-items:center' }, login, 'Start with Windows')),
+      h('div', { class: 'row desk-only' }, h('label', { class: 'l' }, ''), h('label', { for: 'login', style: 'display:flex;gap:6px;align-items:center' }, login, window.cal.isMac ? 'Open at login' : 'Start with Windows')),
       h('div', { class: 'row desk-only' }, h('label', { class: 'l' }, 'Tab'),
         h('button', { onclick: () => { closeDialog(); window.cal.resetTab(); } }, 'Move the tab back to the right edge')),
       h('div', { class: 'hint desk-only' }, 'Drag the dotted strip at the top of the tab to put it anywhere.'),
@@ -1043,7 +1044,7 @@ function openThemes() {
         h('button', { class: filter === k ? 'on' : '', onclick: () => { filter = k; paint(); } }, l)));
       const list = window.THEMES.filter((t) => filter === 'all' || (filter === 'dark') === t.dark);
       const auto = window.THEMES.find((x) => x.id === (darkQuery.matches ? 'midnight' : 'paper'));
-      grid.replaceChildren(...(filter === 'all' ? [card(auto, 'Match Windows', true)] : []), ...list.map((t) => card(t, t.name)));
+      grid.replaceChildren(...(filter === 'all' ? [card(auto, window.cal.isMac ? 'Match macOS' : (IS_WEB ? 'Match my phone' : 'Match Windows'), true)] : []), ...list.map((t) => card(t, t.name)));
     };
     paint();
     dlg.append(h('h2', {}, 'Colour theme'),
@@ -1414,7 +1415,7 @@ function openShare() {
       h('div', { class: 'choice' },
         IS_WEB ? null : big('📋', 'Copy as a picture', 'Then paste it into WhatsApp, Messages, email…', async () => {
           await snapshot(busy.checked, (rect) => window.cal.copyPicture(rect));
-          toast('Picture copied. Paste it anywhere with Ctrl+V.');
+          toast(`Picture copied. Paste it anywhere with ${window.cal.isMac ? '⌘V' : 'Ctrl+V'}.`);
         }),
         IS_WEB ? null : big('🖼', 'Save as a picture…', 'A PNG image you can send or print', async () => {
           const file = await snapshot(busy.checked, (rect) => window.cal.savePicture(rect, `Calendar ${fileSafe(periodName())}.png`));

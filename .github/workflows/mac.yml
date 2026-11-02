@@ -1,0 +1,45 @@
+# Builds the Mac app (works on Apple Silicon and Intel) and attaches it to a GitHub release.
+# Runs when a tag like v1.6.0 is pushed, or by hand from the Actions tab.
+name: Build Mac app
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - name: Build
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: npx electron-builder --mac dir --universal
+      - name: Sign for this Mac only (ad-hoc) and pack
+        run: |
+          APP="dist/mac-universal/Hover Calendar.app"
+          codesign --force --deep --sign - "$APP"
+          codesign --verify --deep --strict "$APP"
+          VER=$(node -p "require('./package.json').version")
+          mkdir -p out dmgroot
+          cp -R "$APP" dmgroot/
+          ln -s /Applications dmgroot/Applications
+          hdiutil create -volname "Hover Calendar" -srcfolder dmgroot -ov -format UDZO "out/HoverCalendar-$VER-mac.dmg"
+          ditto -c -k --keepParent "$APP" "out/HoverCalendar-$VER-mac.zip"
+          echo "VER=$VER" >> "$GITHUB_ENV"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HoverCalendar-mac
+          path: out/*
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 || gh release create "$GITHUB_REF_NAME" --title "Hover Calendar $VER" --notes "Mac: download the .dmg, drag Hover Calendar into Applications. First launch: System Settings → Privacy & Security → Open Anyway."
+          gh release upload "$GITHUB_REF_NAME" out/* --clobber

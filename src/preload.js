@@ -1,6 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('cal', {
+  isMac: process.platform === 'darwin',
   load: () => ipcRenderer.invoke('load'),
   save: (data, rev) => ipcRenderer.send('save', data, rev),
   holdOpen: (v) => ipcRenderer.send('hold-open', v),

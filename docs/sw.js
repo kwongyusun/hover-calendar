@@ -1,5 +1,5 @@
 // Keeps the app working offline: serve saved files straight away, refresh them in the background.
-const CACHE = 'hover-calendar-1793603514';
+const CACHE = 'hover-calendar-1793617046';
 const FILES = ['./', 'index.html', 'styles.css', 'mobile.css', 'config.js', 'themes.js', 'recur.js', 'sync.js', 'cloud.js', 'host.js', 'app.js', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png'];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)).then(() => self.skipWaiting()));
